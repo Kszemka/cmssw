@@ -15,3 +15,6 @@ ctppsProtons.default_time = -999.
 
 from Configuration.Eras.Modifier_run3_common_cff import run3_common
 run3_common.toModify(ctppsProtons, useNewLHCInfo = True)
+
+from Configuration.Eras.Modifier_run3_directSim_cff import run3_directSim
+run3_directSim.toModify(ctppsProtons, useNewLHCInfo = False)

@@ -12,7 +12,11 @@ LHCInfoCombined::LHCInfoCombined(const edm::EventSetup& iSetup,
                                  const edm::ESGetToken<LHCInfoPerLS, LHCInfoPerLSRcd>& tokenInfoPerLS,
                                  const edm::ESGetToken<LHCInfoPerFill, LHCInfoPerFillRcd>& tokenInfoPerFill,
                                  const edm::ESGetToken<LHCInfo, LHCInfoRcd>& tokenInfo,
-                                 bool useNewLHCInfo) {
+                                 bool useNewLHCInfo,
+                                 bool isRealData) {
+  if (!isRealData && !useNewLHCInfoForDirectSimu) {
+    useNewLHCInfo = false;
+  }
   if (useNewLHCInfo) {
     edm::ESHandle<LHCInfoPerLS> hLHCInfoPerLS = iSetup.getHandle(tokenInfoPerLS);
     edm::ESHandle<LHCInfoPerFill> hLHCInfoFill = iSetup.getHandle(tokenInfoPerFill);
@@ -43,7 +47,7 @@ void LHCInfoCombined::setFromPerFill(const LHCInfoPerFill& infoPerFill) {
   fillNumber = infoPerFill.fillNumber();
 }
 
-float LHCInfoCombined::crossingAngle() {
+float LHCInfoCombined::crossingAngle() const {
   if (crossingAngleX == 0. && crossingAngleY == 0.) {
     return crossingAngleInvalid;
   }

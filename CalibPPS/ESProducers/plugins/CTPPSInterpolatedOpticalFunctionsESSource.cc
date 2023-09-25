@@ -75,7 +75,7 @@ std::shared_ptr<LHCInterpolatedOpticalFunctionsSetCollection> CTPPSInterpolatedO
   auto lhcInfoCombined = LHCInfoCombined::createLHCInfoCombined<
       CTPPSInterpolatedOpticsRcd,
       edm::mpl::Vector<CTPPSOpticsRcd, LHCInfoRcd, LHCInfoPerFillRcd, LHCInfoPerLSRcd>>(
-      iRecord, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_);
+      iRecord, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_, true);
 
   // is there anything to do?
   if (currentDataValid_ && lhcInfoCombined.crossingAngle() == currentCrossingAngle_)
