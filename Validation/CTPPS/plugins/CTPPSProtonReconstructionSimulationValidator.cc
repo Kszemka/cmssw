@@ -214,7 +214,7 @@ CTPPSProtonReconstructionSimulationValidator::CTPPSProtonReconstructionSimulatio
 void CTPPSProtonReconstructionSimulationValidator::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) {
   // get conditions
   const LHCInfoCombined lhcInfoCombined(
-      iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_, iEvent.isRealData());
+      iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_);
 
   // get input
   edm::Handle<edm::HepMCProduct> hHepMCBeforeSmearing;

@@ -28,8 +28,7 @@ public:
                   const edm::ESGetToken<LHCInfoPerLS, LHCInfoPerLSRcd>& tokenInfoPerLS,
                   const edm::ESGetToken<LHCInfoPerFill, LHCInfoPerFillRcd>& tokenInfoPerFill,
                   const edm::ESGetToken<LHCInfo, LHCInfoRcd>& tokenInfo,
-                  bool useNewLHCInfo,
-                  bool isRealData);
+                  bool useNewLHCInfo);
 
   //this factory method is necessary because constructor can't be a template
   template <class RecordT, class ListT>
@@ -38,14 +37,11 @@ public:
       const edm::ESGetToken<LHCInfoPerLS, LHCInfoPerLSRcd>& tokenInfoPerLS,
       const edm::ESGetToken<LHCInfoPerFill, LHCInfoPerFillRcd>& tokenInfoPerFill,
       const edm::ESGetToken<LHCInfo, LHCInfoRcd>& tokenInfo,
-      bool useNewLHCInfo,
-      bool isRealData);
+      bool useNewLHCInfo);
 
   void setFromLHCInfo(const LHCInfo& lhcInfo);
   void setFromPerLS(const LHCInfoPerLS& infoPerLS);
   void setFromPerFill(const LHCInfoPerFill& infoPerFill);
-
-  static inline bool useNewLHCInfoForDirectSimu = false;
 
   float crossingAngle() const;
   static constexpr float crossingAngleInvalid = -1.;
@@ -69,12 +65,8 @@ LHCInfoCombined LHCInfoCombined::createLHCInfoCombined(
     const edm::ESGetToken<LHCInfoPerLS, LHCInfoPerLSRcd>& tokenInfoPerLS,
     const edm::ESGetToken<LHCInfoPerFill, LHCInfoPerFillRcd>& tokenInfoPerFill,
     const edm::ESGetToken<LHCInfo, LHCInfoRcd>& tokenInfo,
-    bool useNewLHCInfo,
-    bool isRealData) {
+    bool useNewLHCInfo) {
   LHCInfoCombined lhcInfoCombined;
-  if (!isRealData && !useNewLHCInfoForDirectSimu) {
-    useNewLHCInfo = false;
-  }
   if (useNewLHCInfo) {
     LHCInfoPerLS const& lhcInfoPerLS = iRecord.get(tokenInfoPerLS);
     LHCInfoPerFill const& lhcInfoPerFill = iRecord.get(tokenInfoPerFill);

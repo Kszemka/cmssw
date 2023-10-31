@@ -72,7 +72,7 @@ std::unique_ptr<CTPPSBeamParameters> CTPPSBeamParametersFromLHCInfoESSource::pro
   auto lhcInfoCombined =
       LHCInfoCombined::createLHCInfoCombined<CTPPSBeamParametersRcd,
                                              edm::mpl::Vector<LHCInfoRcd, LHCInfoPerFillRcd, LHCInfoPerLSRcd>>(
-          iRecord, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_, true);
+          iRecord, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_);
 
   auto bp = std::make_unique<CTPPSBeamParameters>(defaultParameters_);
 

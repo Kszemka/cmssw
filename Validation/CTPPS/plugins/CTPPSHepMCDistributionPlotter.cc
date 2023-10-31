@@ -91,8 +91,7 @@ void CTPPSHepMCDistributionPlotter::fillDescriptions(edm::ConfigurationDescripti
 
 void CTPPSHepMCDistributionPlotter::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) {
   // get conditions
-  LHCInfoCombined lhcInfoCombined(
-      iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_, iEvent.isRealData());
+  LHCInfoCombined lhcInfoCombined(iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_);
 
   // get input
   edm::Handle<edm::HepMCProduct> hHepMC;

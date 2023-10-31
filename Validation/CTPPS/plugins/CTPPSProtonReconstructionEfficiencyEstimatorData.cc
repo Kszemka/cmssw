@@ -331,7 +331,7 @@ void CTPPSProtonReconstructionEfficiencyEstimatorData::analyze(const edm::Event 
 
   // get conditions
   const LHCInfoCombined lhcInfoCombined(
-      iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_, iEvent.isRealData());
+      iSetup, lhcInfoPerLSToken_, lhcInfoPerFillToken_, lhcInfoToken_, useNewLHCInfo_);
   const auto &opticalFunctions = iSetup.getData(opticsESToken_);
   const auto &ppsAssociationCuts = iSetup.getData(ppsAssociationCutsToken_);
 
