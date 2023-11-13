@@ -21,9 +21,10 @@
 
 class PPSTimingCalibrationPI {
 public:
-  enum parameter { parameter0 = 0, parameter1 = 1, parameter2 = 2, parameter3 = 3 };
 
   enum conditions_db { db0 = 0, db1 = 1 };
+
+  enum station {station1 = 1, station2 = 2};
 
   enum conditions_plane { plane0 = 0, plane1 = 1, plane2 = 2, plane3 = 3 };
 
@@ -43,21 +44,8 @@ public:
 
   };
 
-  static std::string getStringFromParamEnum(const parameter& parameter) {
-    switch (parameter) {
-      case 0:
-        return "parameter 0";
-      case 1:
-        return "parameter 1";
-      case 2:
-        return "parameter 2";
-      case 3:
-        return "parameter 3";
+  enum parameter { parameter0 = 0, parameter1 = 1, parameter2 = 2, parameter3 = 3 };
 
-      default:
-        return "not here";
-    }
-  }
 
   static std::string getStringFromDbEnum(const conditions_db& db) {
     switch (db) {
@@ -65,6 +53,18 @@ public:
         return "db = 0";
       case 1:
         return "db = 1";
+
+      default:
+        return "not here";
+    }
+  }
+
+    static std::string getStringFromStationEnum(const station& station) {
+    switch (station) {
+      case 1:
+        return "station 1";
+      case 2:
+        return "station 2";
 
       default:
         return "not here";
@@ -118,12 +118,29 @@ public:
         return "not here";
     }
   }
+
+  static std::string getStringFromParamEnum(const parameter& parameter) {
+    switch (parameter) {
+      case 0:
+        return "parameter 0";
+      case 1:
+        return "parameter 1";
+      case 2:
+        return "parameter 2";
+      case 3:
+        return "parameter 3";
+
+      default:
+        return "not here";
+    }
+  }
 };
 
 /************************************************
     History plots
 *************************************************/
 template <PPSTimingCalibrationPI::conditions_db db,
+          PPSTimingCalibrationPI::station station,
           PPSTimingCalibrationPI::conditions_plane plane,
           PPSTimingCalibrationPI::conditions_channel channel,
           PPSTimingCalibrationPI::parameter param,
@@ -134,17 +151,22 @@ public:
       : cond::payloadInspector::HistoryPlot<PayloadType, float>(
             PPSTimingCalibrationPI::getStringFromParamEnum(param) + " " +
                 PPSTimingCalibrationPI::getStringFromDbEnum(db) + " " +
+                PPSTimingCalibrationPI::getStringFromStationEnum(station) + " " +
                 PPSTimingCalibrationPI::getStringFromPlaneEnum(plane) + " " +
                 PPSTimingCalibrationPI::getStringFromChannelEnum(channel) + " vs. Runs",
             PPSTimingCalibrationPI::getStringFromParamEnum(param)) {}
 
-  float getFromPayload(PayloadType& payload) override { return payload.parameters(db, 1, plane, channel)[param]; }
+  float getFromPayload(PayloadType& payload) override { 
+    return payload.parameters(db, station, plane, channel)[param]; 
+  }
 };
+
 
 /************************************************
     X-Y correlation plots
 *************************************************/
 template <PPSTimingCalibrationPI::conditions_db db,
+          PPSTimingCalibrationPI::station station,
           PPSTimingCalibrationPI::conditions_plane plane,
           PPSTimingCalibrationPI::conditions_channel channel,
           PPSTimingCalibrationPI::parameter param1,
@@ -157,14 +179,15 @@ public:
             "TimingCalibration " + PPSTimingCalibrationPI::getStringFromParamEnum(param1) + " vs. " +
                 PPSTimingCalibrationPI::getStringFromParamEnum(param2) + " on " +
                 PPSTimingCalibrationPI::getStringFromDbEnum(db) + " " +
+                PPSTimingCalibrationPI::getStringFromStationEnum(station) + " " +
                 PPSTimingCalibrationPI::getStringFromPlaneEnum(plane) + " " +
                 PPSTimingCalibrationPI::getStringFromChannelEnum(channel),
             PPSTimingCalibrationPI::getStringFromParamEnum(param1),
             PPSTimingCalibrationPI::getStringFromParamEnum(param2)) {}
 
   std::tuple<double, double> getFromPayload(PayloadType& payload) override {
-    return std::make_tuple(payload.parameters(db, 1, plane, channel)[param1],
-                           payload.parameters(db, 1, plane, channel)[param2]);
+    return std::make_tuple(payload.parameters(db, station, plane, channel)[param1],
+                           payload.parameters(db, station, plane, channel)[param2]);
   }
 };
 
@@ -172,6 +195,7 @@ public:
     Other plots
 *************************************************/
 template <PPSTimingCalibrationPI::conditions_db db,
+          PPSTimingCalibrationPI::station station,
           PPSTimingCalibrationPI::conditions_plane plane,
           PPSTimingCalibrationPI::parameter param,
           class PayloadType>
@@ -185,7 +209,7 @@ public:
     auto tag = cond::payloadInspector::PlotBase::getTag<0>();
     auto tagname = tag.name;
     auto iov = tag.iovs.back();
-    auto m_payload = this->fetchPayload(std::get<1>(iov));
+    auto m_payload = this->fetchPayload(std::get<1>(iov));     
 
     if (m_payload != nullptr) {
       TCanvas canvas(
@@ -196,15 +220,16 @@ public:
       Double_t x[n];
       Double_t y[n];
       for (int i = 0; i < n; i++) {
-        y[i] = m_payload->parameters(db, 1, plane, i)[param];
+        y[i] = m_payload->parameters(db, station, plane, i)[param];
         x[i] = i;
       }
 
       TGraph* graph = new TGraph(n, x, y);
       graph->SetTitle(("PPSTimingCalibration " + PPSTimingCalibrationPI::getStringFromDbEnum(db) + " " +
-                       PPSTimingCalibrationPI::getStringFromPlaneEnum(plane) + " " +
-                       PPSTimingCalibrationPI::getStringFromParamEnum(param) + " per channel; channel; parameter")
-                          .c_str());
+                      PPSTimingCalibrationPI::getStringFromStationEnum(station) + " " +
+                      PPSTimingCalibrationPI::getStringFromPlaneEnum(plane) + " " +
+                      PPSTimingCalibrationPI::getStringFromParamEnum(param) + " per channel; channel; parameter")
+                      .c_str());
       graph->SetMarkerColor(2);
       graph->SetMarkerSize(1.5);
       graph->SetMarkerStyle(21);

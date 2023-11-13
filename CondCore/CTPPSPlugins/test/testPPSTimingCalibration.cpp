@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
   edm::LogPrint("testPPSCalibrationPI") << "## Exercising TimingCalibration plots ";
 
   ParametersPerChannel<PPSTimingCalibrationPI::db0,
+                       PPSTimingCalibrationPI::station1,
                        PPSTimingCalibrationPI::plane0,
                        PPSTimingCalibrationPI::parameter0,
                        PPSTimingCalibration>
